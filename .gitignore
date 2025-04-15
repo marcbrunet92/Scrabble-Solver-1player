@@ -1,4 +1,5 @@
 .idea/
-scrabble_words_complete.txt
+*.txt
 __pycache__/
-demo.py
+scratch/
+scratch.py

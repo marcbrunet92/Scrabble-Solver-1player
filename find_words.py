@@ -1,6 +1,12 @@
 from dawg import *
 import pickle
 
+import importlib
+languages = input("Enter language (en, fr): ")
+module = importlib.import_module(f"languages.{languages}.{languages}")
+POINT_DICT = module.POINT_DICT
+TILE_BAG = module.TILE_BAG
+LEXICON_PATH = module.LEXICON_PATH
 
 class Square:
     def __init__(self, letter=None):
@@ -11,13 +17,7 @@ class Square:
 
 def score_word(word):
     score = 0
-    point_dict = {"A": 1, "B": 3, "C": 3, "D": 2,
-                  "E": 1, "F": 4, "G": 2, "H": 4,
-                  "I": 1, "J": 8, "K": 5, "L": 1,
-                  "M": 3, "N": 1, "O": 1, "P": 3,
-                  "Q": 10, "R": 1, "S": 1, "T": 1,
-                  "U": 1, "V": 4, "W": 4, "X": 8,
-                  "Y": 8, "Z": 10}
+    point_dict = POINT_DICT
 
     for letter in word:
         score += point_dict[letter]
@@ -71,13 +71,12 @@ def get_all_words(start_node, square, rack, word):
 
 
 if __name__ == "__main__":
-    to_load = open("lexicon/scrabble_words_complete.pickle", "rb")
+
+    to_load = open(LEXICON_PATH, "rb")
     root = pickle.load(to_load)
     to_load.close()
-
     word_score_dict = {}
     word_rack = ["E", "S", "T", "O"]
-
     placed_square = Square("H")
     a = Square()
     b = Square()

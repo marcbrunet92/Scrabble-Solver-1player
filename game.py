@@ -5,6 +5,13 @@ import sys
 import random
 import pickle
 
+import importlib
+languages = input("Enter language (en, fr): ")
+module = importlib.import_module(f"languages.{languages}.{languages}")
+POINT_DICT = module.POINT_DICT
+TILE_BAG = module.TILE_BAG
+LEXICON_PATH = module.LEXICON_PATH
+
 
 # returns a list of all words played on the board
 def all_board_words(board):
@@ -209,12 +216,8 @@ if __name__ == "__main__":
     score_font = pygame.font.Font(None, 25)
     game_state = "start_screen"
 
-    tile_bag = ["A"] * 9 + ["B"] * 2 + ["C"] * 2 + ["D"] * 4 + ["E"] * 12 + ["F"] * 2 + ["G"] * 3 + \
-               ["H"] * 2 + ["I"] * 9 + ["J"] * 1 + ["K"] * 1 + ["L"] * 4 + ["M"] * 2 + ["N"] * 6 + \
-               ["O"] * 8 + ["P"] * 2 + ["Q"] * 1 + ["R"] * 6 + ["S"] * 4 + ["T"] * 6 + ["U"] * 4 + \
-               ["V"] * 2 + ["W"] * 2 + ["X"] * 1 + ["Y"] * 2 + ["Z"] * 1 + ["%"] * 2
-
-    to_load = open("lexicon/scrabble_words_complete.pickle", "rb")
+    tile_bag = TILE_BAG.copy()
+    to_load = open(LEXICON_PATH, "rb")
     root = pickle.load(to_load)
     to_load.close()
     word_rack = random.sample(tile_bag, 7)
@@ -237,10 +240,7 @@ if __name__ == "__main__":
                     game_state = "game_screen"
                 if event.key == pygame.K_SPACE and game_state == "end_screen":
                     game_state = "game_screen"
-                    tile_bag = ["A"] * 9 + ["B"] * 2 + ["C"] * 2 + ["D"] * 4 + ["E"] * 12 + ["F"] * 2 + ["G"] * 3 + \
-                               ["H"] * 2 + ["I"] * 9 + ["J"] * 1 + ["K"] * 1 + ["L"] * 4 + ["M"] * 2 + ["N"] * 6 + \
-                               ["O"] * 8 + ["P"] * 2 + ["Q"] * 1 + ["R"] * 6 + ["S"] * 4 + ["T"] * 6 + ["U"] * 4 + \
-                               ["V"] * 2 + ["W"] * 2 + ["X"] * 1 + ["Y"] * 2 + ["Z"] * 1 + ["%"] * 2
+                    tile_bag = TILE_BAG.copy()
 
                     word_rack = random.sample(tile_bag, 7)
                     [tile_bag.remove(letter) for letter in word_rack]

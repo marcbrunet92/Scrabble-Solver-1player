@@ -2,7 +2,13 @@ from dawg import *
 import regex as re
 import random
 import copy
+import importlib
 
+languages = input("Enter language (en, fr): ")
+module = importlib.import_module(f"languages.{languages}.{languages}")
+POINT_DICT = module.POINT_DICT
+TILE_BAG = module.TILE_BAG
+LEXICON_PATH = module.LEXICON_PATH
 
 class Square:
     # default behavior is blank square, no score modifier, all cross-checks valid
@@ -96,13 +102,7 @@ class ScrabbleBoard:
         self.board = [row_1, row_2, row_3, row_4, row_5, row_6, row_7, row_8,
                       row_9, row_10, row_11, row_12, row_13, row_14, row_15, row_16]
 
-        self.point_dict = {"A": 1, "B": 3, "C": 3, "D": 2,
-                           "E": 1, "F": 4, "G": 2, "H": 4,
-                           "I": 1, "J": 8, "K": 5, "L": 1,
-                           "M": 3, "N": 1, "O": 1, "P": 3,
-                           "Q": 10, "R": 1, "S": 1, "T": 1,
-                           "U": 1, "V": 4, "W": 4, "X": 8,
-                           "Y": 8, "Z": 10, "%": 0}
+        self.point_dict = POINT_DICT
 
         self.words_on_board = []
 
@@ -549,12 +549,8 @@ def refill_word_rack(rack, tile_bag):
 
 def play_game():
     score = 0
-    tile_bag = ["A"] * 9 + ["B"] * 2 + ["C"] * 2 + ["D"] * 4 + ["E"] * 12 + ["F"] * 2 + ["G"] * 3 + \
-               ["H"] * 2 + ["I"] * 9 + ["J"] * 1 + ["K"] * 1 + ["L"] * 4 + ["M"] * 2 + ["N"] * 6 + \
-               ["O"] * 8 + ["P"] * 2 + ["Q"] * 1 + ["R"] * 6 + ["S"] * 4 + ["T"] * 6 + ["U"] * 4 + \
-               ["V"] * 2 + ["W"] * 2 + ["X"] * 1 + ["Y"] * 2 + ["Z"] * 1 + ["%"] * 2
-
-    to_load = open("lexicon/scrabble_words_complete.pickle", "rb")
+    tile_bag = TILE_BAG.copy()
+    to_load = open(LEXICON_PATH, "rb")
     root = pickle.load(to_load)
     to_load.close()
     word_rack = random.sample(tile_bag, 7)
